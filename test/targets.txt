@@ -1,0 +1,6 @@
+sample_seqname	tissue	type
+neun_1	NeuNpos	interest
+neun_2	NeuNpos	interest
+pbmc_1	PBMC	contrast
+pbmc_2	PBMC	contrast
+unk_1	unknown	identify
