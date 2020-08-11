@@ -1,6 +1,4 @@
-# methylK
-
-_methylK_ is a directory of summary scripts used within "Chatterton et al, Methods for detecting Brain-Cell derived Cell-Free DNA, 2020"
+# _methylK_ is a directory of scripts used within "Chatterton et al, Methods for detecting Brain-Cell derived Cell-Free DNA, 2020"
 
 Background: DNA methylation is an epigenetic modification that is intricately involved in cell-specification and cell-function. Bisulfite conversion of DNA followed by Next Generation Sequencing (NGS) allows the analysis of DNA methylation at the single molecule level. The cell-specificity of DNA methylation patterns can be used to identify the cell-of-origin of DNA molecules, such as deconvolution of cell-free DNA (cfDNA). To acheive this, we binarize DNA methylation patterns of primary cells-types within genomic context, creating cell-specific DNA methylation reference genomes for the assignment of DNA fragments of unknown source (i.e. cfDNA) to their cell-of-origin.
 
