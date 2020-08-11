@@ -7,7 +7,7 @@ Background: DNA methylation is an epigenetic modification that is intricately in
 
 ### File Formats 
 
- targets: a tab-delimited table (.txt) with the headers "sample_seqname" "tissue" "type". Each sample to be analysed is represented by one row. The sample_seqname column refers to the sample names of the .fastq files i.e. "sample_seqname".R{1/2}.fastq.gz. The "tissue" column is used to define which tissue group this sample belongs and can be any value eg. "PBMC". The "type" column defines how that sample will be used within the analysis and can be one of 3 values "interest" "contrast" or "identify". For type "interest" and "contrast" a methylotype.fasta file will be made for each "tissue" x "type". 
+ targets: a tab-delimited table (.txt) with the headers "sample_seqname" "tissue" "type". Each sample to be analysed is represented by one row. The sample_seqname column refers to the sample names of the .fastq files i.e. "sample_seqname".R{1/2}.fastq.gz. The "tissue" column is used to define which tissue group this sample belongs and can be any value eg. "PBMC". The "type" column defines how that sample will be used within the analysis and can be one of 3 values "interest", "contrast" or "identify". For type "interest" and "contrast" a methylotype.fasta file will be made for each "tissue" x "type". 
 
  genome: reference genome file (.fa). Needs to sorted. This can be done using seqkit (seqkit sort -i in.fa -o out.fa)
  fastq: files need to be named "sample_seqname".R{1/2}.fastq.gz. 
@@ -61,13 +61,13 @@ We have run the analysis on Linux operating system. All of the following softwar
 	$methylK_dir/quant_mk_cfdna.sh $methylK_dir $targets $sdir $odir $read_length
 	Rscript --vanilla $methylK_dir/snr_quant.R $odir $methylK_dir $targets
 
-	note - we provide the .kidx file (cell_methylotype.kidx) that can be used to quantify Neuron and Glia-cfDNA if the assays used within Chatterton et al, 2020 have been applied to cfDNA. To do so uncomment line 112 in quant_mk_cfdna.sh.
+	note - we provide the .kidx file (cell_methylotype.kidx) that can be used to quantify Neuron and Glia-cfDNA if the assays used within "Chatterton et al, Methods for detecting Brain-Cell derived Cell-Free DNA, 2020" have been applied to cfDNA. To do so uncomment line 112 in quant_mk_cfdna.sh.
 
 
 ## Step-by-step
 
 ## 1. FASTQ_to_meth
-Overview - Alignment and DNA methylation extraction needs to be performed on all sample types "interest" or "contrast". If this step has already been completed and DNA methylation has been extracted and stored in either .tsv, .bedGraph or .bismark.cov format then we can move to "meth to FASTA". For convenience we provide scripts used within Chatterton et al, 2020 for the preparation of bisulfite genome (genome_prepare.sh) alignment and methylation calling using bismark (meth_trim_align_call.sh). Note: 1. NGS read quality should be ascertained prior to running using programs such as fastqc. 2. The .fastq files need to be named using the following convention "sample_seqname".R{1/2}.fastq.gz 3. The scripts perform alignment and calling of all samples of "types" (column 3 of targets.txt) "interest" and "contrast". 4. The NGS libraries were created with Illumina Nextera and are trimmed using these adapter sequences. Using the test data his should run in ~20mins using 4 CPU and 16Gb RAM.
+Overview - Alignment and DNA methylation extraction needs to be performed on all sample types "interest" or "contrast". If this step has already been completed and DNA methylation has been extracted and stored in either .tsv, .bedGraph or .bismark.cov format then we can move to "meth to FASTA". For convenience we provide scripts used within "Chatterton et al, Methods for detecting Brain-Cell derived Cell-Free DNA, 2020" for the preparation of bisulfite genome (genome_prepare.sh) alignment and methylation calling using [Bismark](https://www.bioinformatics.babraham.ac.uk/projects/bismark/) (meth_trim_align_call.sh). Note: 1. NGS read quality should be ascertained prior to running using programs such as fastqc. 2. The .fastq files need to be named using the following convention "sample_seqname".R{1/2}.fastq.gz 3. The scripts perform alignment and calling of all samples of "types" (column 3 of targets.txt) "interest" and "contrast". 4. The NGS libraries were created with Illumina Nextera and are trimmed using these adapter sequences. Using the test data this should run in ~20mins using 4 CPU and 16Gb RAM.
 
 	# Inputs #
 	methylK_dir=methylK/
