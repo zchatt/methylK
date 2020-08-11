@@ -37,7 +37,7 @@ We have run the analysis on Linux operating system. All of the following softwar
 ## Quickrun
 
 	# Inputs #
-	methylK_dir=/project/RDS-SMS-FFbigdata-RW/Epigenetics/tngbs/methylK_120419/methylK_240419
+	methylK_dir=/methylK
 	genome=$methylK_dir/tNGBS_n33_lambda1.3.fa
 
 	# test directory contains .fastq files and targets.txt
