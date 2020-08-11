@@ -18,21 +18,23 @@ Background: DNA methylation is an epigenetic modification that is intricately in
 We have run the analysis on Linux operating system. All of the following software should all be accesible from $PATH
 
 	trimmomatic/0.36
+	bedtools
+	bismark/0.18.2
+	bowtie2/2.2.5
+	gatk/3.6.0
+	kallisto/0.46.0
 	parallel/20160222
 	njobs=4 # set to make server happy when using parallel
-	bismark/0.18.2
-	samtools/1.9
 	picard/2.7.1
-	gatk/3.6.0 
-	kallisto/0.46.0
 	python/2.7.9
 	R/3.6.3
-	bowtie2/2.2.5
-	bedtools
+	samtools/1.9
+	trimmomatic/0.36
+
 	export PATH=ngsutils/bin:$PATH # ngsutils git
 	GATK_JAR=gatk
 	PICARD_JAR=picard
-	bwa
+
 
 ## Quickrun
 
