@@ -7,7 +7,6 @@
 
 read_cgcnt<-function(location_cgcnt){
   file.names<-list.files(location_cgcnt, pattern = "cgcount", full.names=T)
-  file.names<-list.files("/project/RDS-SMS-FFbigdata-RW/Epigenetics/tngbs/zacchatterton_tNGBS060219/mk_organise/test/output", pattern = "cgcount", full.names=T)
   file.names<-file.names[-grep("_false_",file.names)]
   file.names<-file.names[-grep("_true_",file.names)]
   
@@ -57,7 +56,6 @@ read_cgcnt<-function(location_cgcnt){
 
 read_tfcgcnt<-function(location_cgcnt){
   file.names<-list.files(location_cgcnt, pattern = "cgcount", full.names=T)
-  file.names<-list.files("/project/RDS-SMS-FFbigdata-RW/Epigenetics/tngbs/zacchatterton_tNGBS060219/mk_organise/test/output", pattern = "cgcount", full.names=T)
   file.names<-file.names[grep("_false_",file.names)]
   file.names<-file.names[grep("_true_",file.names)]
   
