@@ -17,7 +17,7 @@ Background: DNA methylation is an epigenetic modification that is intricately in
 ### Software 
 We have run the analysis on Linux operating system. All of the following software should all be accesible from $PATH
 
-	trimmomatic/0.36
+[trimmomatic](http://www.usadellab.org/cms/?page=trimmomatic) (0.36)
 	bedtools
 	bismark/0.18.2
 	bowtie2/2.2.5
