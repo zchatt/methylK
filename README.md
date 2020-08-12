@@ -17,8 +17,8 @@ Background: DNA methylation is an epigenetic modification that is intricately in
 ### Software 
 We have run the analysis on Linux operating system. All of the following software should all be accesible from $PATH
 
-[bedtools](https://bedtools.readthedocs.io/en/latest/)
-[bismark](https://www.bioinformatics.babraham.ac.uk/projects/bismark/)  (0.18.2)
+[bedtools](https://bedtools.readthedocs.io/en/latest/),
+[bismark](https://www.bioinformatics.babraham.ac.uk/projects/bismark/)  (0.18.2),
 [bowtie2](http://bowtie-bio.sourceforge.net/bowtie2/index.shtml) (2.2.5)
 [gatk](https://gatk.broadinstitute.org/hc/en-us) (3.6.0)
 [kallisto](https://github.com/pachterlab/kallisto_paper_analysis) (0.46.0)
