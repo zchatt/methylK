@@ -22,10 +22,10 @@ fi
 
 # Assign variables
 if [ -z "$PS1" ]; then
-    methylK_dir=$1 # ouput directory
+    methylK_dir=$1 # methylK directory
     targets=$2 # phenotype dataframe
-    sdir=$3 # threshold for coverage to include cytosine in analysis
-    odir=$4 # genome .fa file
+    sdir=$3 # location of .fastq files
+    odir=$4 # output directory
     read_length=$5
 
 fi
@@ -44,6 +44,32 @@ echo "read length == $5"
 # ensure targets file properly formatted
 perl -pi -e 's/\r\n/\n/g' $targets
 
+#####################
+### Read Trimming ###
+#####################
+cd $odir
+# Ensure .fastq files are present and make lists for sample types "identify"
+echo ""
+echo "[ Checking all .fastq.gz files are present ]"
+echo ""
+
+rm read1 read2 2> /dev/null
+for i in $(awk '$3 ~ /identify/ {print $1}' $targets); do
+    # make read list
+    ls $sdir/${i}.R1.fastq.gz >> read1
+    ls $sdir/${i}.R2.fastq.gz >> read2
+if [ ! -f $(ls -d $sdir/${i}.R1.fastq.gz) ]
+then
+    echo "$0: File '${i}' not found." >&2
+  exit 1
+fi
+done
+
+# create softlink to Nextera.fa
+ln -sf $methylK_dir/NexteraPE-PE.fa NexteraPE-PE.fa
+
+# run trimmomatic in parallel
+parallel --xapply -j $njobs --eta trimmomatic PE {1} {2} {1/.}_paired.fq.gz {1/.}_unpaired.fq.gz {2/.}_paired.fq.gz {2/.}_unpaired.fq.gz ILLUMINACLIP:NexteraPE-PE.fa:2:30:10 LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 MINLEN:25 :::: read1 :::: read2
 
 #######################################################
 ### Truncate paired and trimmed reads Read Trimming ###
