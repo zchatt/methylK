@@ -68,7 +68,7 @@ We have run the analysis on Linux operating system. All of the following softwar
 
 ## Step-by-step
 
-## 1. FASTQ_to_meth
+## 1. FASTQ to meth
 Overview - Alignment and DNA methylation extraction needs to be performed on all sample types "interest" or "contrast". If this step has already been completed and DNA methylation has been extracted and stored in either .tsv, .bedGraph or .bismark.cov format then we can move to "meth to FASTA". For convenience we provide scripts used within _(Chatterton et al, Methods for detecting Brain-Cell derived Cell-Free DNA, 2020)_ for the preparation of bisulfite genome (genome_prepare.sh) alignment and methylation calling using [Bismark](https://www.bioinformatics.babraham.ac.uk/projects/bismark/) (meth_trim_align_call.sh). Note: 1. NGS read quality should be ascertained prior to running using programs such as fastqc. 2. The .fastq files need to be named using the following convention "sample_seqname".R{1/2}.fastq.gz 3. The scripts perform alignment and calling of all samples of "types" (column 3 of targets.txt) "interest" and "contrast". 4. The NGS libraries were created with Illumina Nextera and are trimmed using these adapter sequences. Using the test data this should run in ~20mins using 4 CPU and 16Gb RAM.
 
 	# Inputs #
@@ -85,7 +85,7 @@ Overview - Alignment and DNA methylation extraction needs to be performed on all
 	$methylK_dir/fastq_to_bed.sh $methylK_dir $genome $sdir $odir $targets
 
 
-## 2. meth_to_FASTA
+## 2. meth to FASTA
 Overview - Here we binerize the DNA methylation values depending on our "bin_threshold". For instance bin_threshold=50 results in any cytosine with DNA methylation >=50% being translated into a "C" with FASTA format, converesly cytosines with DNA methylation <50% are tranlsated into "T".The script will produce a FASTA file (methylotype.fasta) for each "tissue" (column 2 of targets.txt) of types (column 3 of targets.txt) "interest" and "contrast". In order to create a k-mer index of sample types "interest" and "contrast" we need to combine the methylotype.fasta files from each "tissue" into master_methylotype.fasta file. Base changes that are dependent on the DNA methylation of each tissue are introduced into the .fasta file. The base changes enable the DNA methylation to be contextualised within the genome sequence so that DNA methylation based k-mers can be characterised between "tissues". 
 
 Note. We use [Kallisto](https://github.com/pachterlab/kallisto_paper_analysis) software to index k-mers from the master_methylotype.fasta file. It is therefore critical to only use cytosines with coverage accross all "tissues". Cytosines cannot be masked as [Kallisto](https://github.com/pachterlab/kallisto_paper_analysis) looks for ACGUT comptibility and if none is found, such as in the case of "N", the nucleotide is replaced with with a random nucleotide. Therefore we break-up the .fasta sequences at cytosine that do not have coverage accross all sample types "interest" and "contrast".
