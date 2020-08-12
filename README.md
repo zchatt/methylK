@@ -14,7 +14,7 @@ Background: DNA methylation is an epigenetic modification that is intricately in
 
  note - If you are starting from ".bed" or ".bedGraph" files need to be in the format chr,start,end,methylation_percentage
 
-### Software 
+### Software Required
 
 [bedtools](https://bedtools.readthedocs.io/en/latest/),
 [bismark](https://www.bioinformatics.babraham.ac.uk/projects/bismark/)  (0.18.2),
