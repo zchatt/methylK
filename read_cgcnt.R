@@ -56,9 +56,9 @@ read_cgcnt<-function(location_cgcnt){
 
 read_tfcgcnt<-function(location_cgcnt){
   file.names<-list.files(location_cgcnt, pattern = "cgcount", full.names=T)
-  file.names<-file.names[grep("_false_",file.names)]
-  file.names<-file.names[grep("_true_",file.names)]
-  
+  toMatch<-c("_false_","_true_")
+  file.names<-file.names[grep(paste(toMatch,collapse="|"),file.names)]
+
   res<-c("counts","sample","assay_long","u_psdcnt","assay","sample_name","psd_cell","ctga","cg" )
   for (i in 1:length(file.names)){
     if (length(readLines(file.names[i])) == 0){
