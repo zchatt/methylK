@@ -1,9 +1,9 @@
 # R script to take the pseudocounts from kallisto and convert into dataframe for fraction of reads for both cell and tissue-type
 library(data.table)
 
-#######################
-# read in data - cell #
-#######################
+#################
+# read in data #
+################
 format_psd_cell <- function(location_psd_cell) {
 file.names<-list.files(location_psd_cell, pattern = ".psdccnt", full.names=T)
 file.names<-file.names[-grep("total.psdccnt",file.names)]

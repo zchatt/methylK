@@ -14,8 +14,9 @@ if (length(args)==0) {
 }
 
 # Converting possible relative path to absolute path for the other arguments
-for (i in c(2)){
+for (i in c(1:3)){
   args[i]<-scan(pipe(paste("readlink -m ", args[i])),"",quiet=TRUE)
+  print(args[i])
 }
 working_dir=args[1]
 methylK_dir=args[2]
@@ -56,8 +57,9 @@ library(caret)
 ############################
 # read data
 setwd(working_dir)
-cg_count=read_cgcnt(working_dir)
+cg_count=read_tfcgcnt(working_dir)
 df_psd<-format_psd_cell(working_dir)
+df_psd<-df_psd[df_psd$sample_name %in% targets$sample_seqname,]
 
 # calculate the number of reads within the trimmed, paired and truncated .fastq files for each sample types "interest" or "contrast"
 for (i in 1:nrow(targets)){
