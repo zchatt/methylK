@@ -39,6 +39,7 @@ note - We have run the analysis on a Linux operating system. All of the software
 
 	# Download #
 	git clone https://github.com/zchatt/methylK.git
+	chmod +x methylK/*
 	
 	# Inputs #
 	methylK_dir=$(readlink -f methylK)
