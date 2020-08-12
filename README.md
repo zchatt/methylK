@@ -15,7 +15,6 @@ Background: DNA methylation is an epigenetic modification that is intricately in
  note - If you are starting from ".bed" or ".bedGraph" files need to be in the format chr,start,end,methylation_percentage
 
 ### Software 
-We have run the analysis on Linux operating system. All of the following software should all be accesible from $PATH
 
 [bedtools](https://bedtools.readthedocs.io/en/latest/),
 [bismark](https://www.bioinformatics.babraham.ac.uk/projects/bismark/)  (0.18.2),
@@ -29,7 +28,7 @@ We have run the analysis on Linux operating system. All of the following softwar
 [samtools](http://www.htslib.org/) (1.9),
 [trimmomatic](http://www.usadellab.org/cms/?page=trimmomatic) (0.36)
 
-Note - All of the software should all be accesible from $PATH
+note - We have run the analysis on a Linux operating system. All of the software should all be accesible from $PATH
 
 	export PATH=ngsutils/bin:$PATH # ngsutils git
 	GATK_JAR=gatk
