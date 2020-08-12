@@ -119,18 +119,22 @@ gzip *truncated_R2.fastq
 echo ""
 echo "[ Assigning (pseudoalign) truncated reads  ]"
 echo ""
-# make list of truncated paired-read R1/R2 fastq files
-ls -d *paired_truncated_R1.fastq.gz > pt_read1
-ls -d *paired_truncated_R2.fastq.gz > pt_read2
 
-# make directories and samples to deposit results
-rm samp mdir 2> /dev/null
+# make directories and sample names to deposit results and make list of truncated paired-read R1/R2 fastq files
+rm samp mdir pt_read1 pt_read2 2> /dev/null
 cp /dev/null mdir
 cp /dev/null samp
-for s in $(cat pt_read1)
-do
-echo $odir/$(basename ${s%.paired_truncated_R1.fastq.gz})"_out" >> mdir
-echo $(basename ${s%.paired_truncated_R1.fastq.gz}) >> samp
+for i in $(awk '$3 ~ /identify/ {print $1}' $targets); do
+    echo $odir/${i}"_out" >> mdir
+    echo ${i} >> samp
+    ls -d ${i}.paired_truncated_R1.fastq.gz >> pt_read1
+    ls -d ${i}.paired_truncated_R2.fastq.gz >> pt_read2
+
+if [ ! -f $(ls -d $odir/${i}.paired_truncated_R1.fastq.gz) ]
+then
+    echo "$0: File '${i}' not found." >&2
+  exit 1
+fi
 done
 
 # run kallisto quant in parallel
