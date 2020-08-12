@@ -125,7 +125,7 @@ Overview - The paried-end .fastq files from the tisue type "identify" are trunca
 	$methylK_dir/quant_mk_cfdna.sh $methylK_dir $targets $sdir $odir $read_length
 
 ## 6. Quantify tissue:interest from tissue:identify over signal-to-noise
-Overview - The number of methylated cytosines within each assigned read are counted and the proportion of assigned reads with co-methylation events above the signal-to-noise threshold are defined "frac_upsdfq_thresh" for all tissue:interest ("\_mkdf.txt"). 
+Overview - The number of methylated cytosines within each assigned read are counted and the proportion of assigned reads with co-methylation events above the signal-to-noise threshold are defined within the "frac_upsdfq_thresh" for all tissue:interest results files "\_mkdf.txt". 
 
 	# Run #
 	Rscript --vanilla $methylK_dir/snr_quant.R $odir $methylK_dir $targets
