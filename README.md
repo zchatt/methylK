@@ -37,14 +37,17 @@ note - We have run the analysis on a Linux operating system. All of the software
 
 ## Quickrun
 
+	# Download #
+	git clone https://github.com/zchatt/methylK.git
+	
 	# Inputs #
-	methylK_dir=/methylK
+	methylK_dir=$(readlink -f methylK)
 	genome=$methylK_dir/tNGBS_n33_lambda1.3.fa
-
-	# test directory contains .fastq files and targets.txt
+	# note - the methylK/test directory contains .fastq files and targets.txt that can be used to test scripts
 	sdir=$methylK_dir/test # sample directory containing all PE .fastq files 
 	targets=$methylK_dir/test/targets.txt # location of targets file
 	odir=$methylK_dir/test/output # ouput directory is where all results will be written
+	mkdir $odir
 	genome_bismark=$odir/Bisulfite_Genome
 	bed_location=$odir/bismark_results
 
@@ -73,8 +76,6 @@ Overview - Alignment and DNA methylation extraction needs to be performed on all
 	# Inputs #
 	methylK_dir=methylK/
 	genome=$methylK_dir/tNGBS_n33_lambda1.3.fa
-
-	# test directory contains .fastq files and targets.txt
 	sdir=$methylK_dir/test # sample directory containing all PE .fastq files 
 	targets=$methylK_dir/test/targets.txt # location of targets file
 	odir=$methylK_dir/test/output # ouput directory is where all results will be written
