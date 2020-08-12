@@ -29,7 +29,7 @@ We have run the analysis on Linux operating system. All of the following softwar
 [samtools](http://www.htslib.org/) (1.9),
 [trimmomatic](http://www.usadellab.org/cms/?page=trimmomatic) (0.36)
 
-Note - All of the following software should all be accesible from $PATH
+Note - All of the software should all be accesible from $PATH
 
 	export PATH=ngsutils/bin:$PATH # ngsutils git
 	GATK_JAR=gatk
