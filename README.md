@@ -125,12 +125,12 @@ Overview - The paried-end .fastq files from the tisue type "identify" are trunca
 	$methylK_dir/quant_mk_cfdna.sh $methylK_dir $targets $sdir $odir $read_length
 
 ## 6. Quantify tissue:interest from tissue:identify over signal-to-noise
-Overview - The number of methylated cytosines within each assigned read are counted and the proportion of assigned reads with co-methylation events above the signal-to-noise threshold are defined "frac_upsdfq_thresh" for all tissue:interest (mkdf.txt). Within our example the summing of the frac_upsdfq_thresh = 2.2% Neuron
+Overview - The number of methylated cytosines within each assigned read are counted and the proportion of assigned reads with co-methylation events above the signal-to-noise threshold are defined "frac_upsdfq_thresh" for all tissue:interest ("\_mkdf.txt"). 
 
 	# Run #
 	Rscript --vanilla $methylK_dir/snr_quant.R $odir $methylK_dir $targets
 
-
+note - The example data provided in methlK/test should result in the sample "unk_1" having 0.6% reads assigned to Neuron and 0.56% reads assigned to Neuron passing threshold (column sums).
 
 
 
