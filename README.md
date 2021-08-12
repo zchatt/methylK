@@ -27,6 +27,7 @@ Background: DNA methylation is an epigenetic modification that is intricately in
 [R](https://www.r-project.org/) (3.6.3),
 [samtools](http://www.htslib.org/) (1.9),
 [trimmomatic](http://www.usadellab.org/cms/?page=trimmomatic) (0.36)
+[ngsutils](https://github.com/ngsutils/ngsutils)
 
 note - We have run the analysis on a Linux operating system. All of the software should all be accesible from $PATH
 
