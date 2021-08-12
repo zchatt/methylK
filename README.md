@@ -66,7 +66,7 @@ note - We have run the analysis on a Linux operating system. All of the software
 	$methylK_dir/quant_mk_cfdna.sh $methylK_dir $targets $sdir $odir $read_length
 	Rscript --vanilla $methylK_dir/snr_quant.R $odir $methylK_dir $targets
 
-	note - we provide the .kidx file (cell_methylotype.kidx) that can be used to quantify Neuron and Glia-cfDNA if the assays used within (Chatterton et al, Methods for detecting Brain-Cell derived Cell-Free DNA, 2020) have been applied to cfDNA. To do so uncomment line 112 in quant_mk_cfdna.sh.
+	#note - we provide the .kidx file (cell_methylotype.kidx) that can be used to quantify Neuron and Glia-cfDNA if the assays used within (Chatterton et al, Methods for detecting Brain-Cell derived Cell-Free DNA, 2020) have been applied to cfDNA. To do so uncomment line 112 in quant_mk_cfdna.sh.
 
 
 ## Step-by-step
