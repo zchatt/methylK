@@ -68,11 +68,12 @@ done
 ###########
 # running from the output folder 
 # Prepare bisulfite genome from .fasta, index and create a dictionary necessary for .vcf to .fasta conversion
-ln -sf $genome .
-$methylK_dir/genome_prepare.sh .
+mkdir ./bismark_genome
+ln -sf $genome ./bismark_genome/
+$methylK_dir/genome_prepare.sh ./bismark_genome/
 
 # Perform bisulfite sequencing alignment and DNA methylation calling
-$methylK_dir/meth_trim_align_call.sh . $bowtie2 $sdir $methylK_dir
+$methylK_dir/meth_trim_align_call.sh ./bismark_genome/ $bowtie2 $sdir $methylK_dir
 
 # cleanup
 rm bam_list out_dir output_log

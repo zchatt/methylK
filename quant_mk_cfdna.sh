@@ -9,6 +9,8 @@
 type parallel >/dev/null 2>&1 || { echo >&2 "parallel is required but not installed.  Aborting."; exit 1; }
 type samtools >/dev/null 2>&1 || { echo >&2 "samtools is required but not installed.  Aborting."; exit 1; }
 type kallisto >/dev/null 2>&1 || { echo >&2 "kallisto is required but not installed.  Aborting."; exit 1; }
+type trimmomatic >/dev/null 2>&1 || { echo >&2 "trimmomatic is required but not installed.  Aborting."; exit 1; }
+
 
 # Check that all values have been supplied
 if [[ $# -eq 0 ]] ; then
@@ -102,8 +104,10 @@ R1_length=$read_length
 R2_length=$read_length
 
 # truncate reads
-parallel --xapply -j+0 --eta fastqutils truncate {1} $R1_length '>' {1.}_truncated :::: p_read1
-parallel --xapply -j+0 --eta fastqutils truncate {1} $R2_length '>' {1.}_truncated :::: p_read2
+#parallel --xapply -j+0 --eta fastqutils truncate {1} $R1_length '>' {1.}_truncated :::: p_read1
+#parallel --xapply -j+0 --eta fastqutils truncate {1} $R2_length '>' {1.}_truncated :::: p_read2
+# run trimmomatic in parallel
+parallel --xapply -j $njobs --eta trimmomatic CROP $read_length PE {1} {2} {1.}_truncated {1.}_untruncated {2.}_truncated {2.}_untruncated :::: p_read1 :::: p_read2
 
 # rename truncated reads
 rename R1.fastq_paired.fq_truncated paired_truncated_R1.fastq *R1.fastq_paired.fq_truncated
