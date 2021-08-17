@@ -7,8 +7,8 @@
 
 read_cgcnt<-function(location_cgcnt){
   file.names<-list.files(location_cgcnt, pattern = "cgcount", full.names=T)
-  file.names<-file.names[-grep("_false_",file.names)]
-  file.names<-file.names[-grep("_true_",file.names)]
+  file.names<-file.names[!(1:length(file.names) %in% -grep("_false_",file.names))]
+  file.names<-file.names[!(1:length(file.names) %in% -grep("_true_",file.names))]
   
   res<-c("counts","sample","assay_long","u_psdcnt","assay","sample_name","psd_cell","ctga","cg" )
   for (i in 1:length(file.names)){
