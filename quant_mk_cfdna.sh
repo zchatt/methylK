@@ -74,8 +74,8 @@ ln -sf $methylK_dir/NexteraPE-PE.fa NexteraPE-PE.fa
 parallel --xapply -j $njobs --eta trimmomatic PE {1} {2} {1/.}_truncated {1/.}_untruncated {2/.}_truncated {2/.}_untruncated ILLUMINACLIP:NexteraPE-PE.fa:2:30:10 LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 MINLEN:25 CROP:$read_length :::: read1 :::: read2
 
 # rename truncated reads
-rename R1.fastq_paired.fq_truncated paired_truncated_R1.fastq *R1.fastq_paired.fq_truncated
-rename R2.fastq_paired.fq_truncated paired_truncated_R2.fastq *R2.fastq_paired.fq_truncated
+rename R1.fastq_truncated paired_truncated_R1.fastq *R1.fastq_truncated 
+rename R2.fastq_truncated paired_truncated_R2.fastq *R2.fastq_truncated 
 # gzip files
 gzip *truncated_R1.fastq
 gzip *truncated_R2.fastq
