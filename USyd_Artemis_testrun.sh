@@ -50,22 +50,3 @@ Rscript --vanilla $methylK_dir/snr_calc.R $odir $methylK_dir $targets
 $methylK_dir/quant_mk_cfdna.sh $methylK_dir $targets $sdir $odir $read_length
 
 Rscript --vanilla $methylK_dir/snr_quant.R $odir $methylK_dir $targets
-
-
-
-
-
-
-
-
-
-install.packages(c("EIAdata", "gdata", "ggmap", "ggplot2"))
-
-install.packages(c("plyr","ggplot2","dplyr","tidyr","gridExtra","scales","caret"))
-
-library(ggplot2)
-library(dplyr)
-library(tidyr)
-library(gridExtra)
-library(scales)
-library(caret)
