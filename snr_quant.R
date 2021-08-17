@@ -16,10 +16,9 @@ for (i in c(2)){
 }
 
 ### ZC testing ###
-#methylK_dir="/project/RDS-SMS-FFbigdata-RW/Epigenetics/tngbs/zacchatterton_tNGBS060219/mk_organise"
-#working_dir="/project/RDS-SMS-FFbigdata-RW/Epigenetics/tngbs/zacchatterton_tNGBS060219/mk_organise/test/output"
-#targets<-read.delim(file="/project/RDS-SMS-FFbigdata-RW/Epigenetics/tngbs/zacchatterton_tNGBS060219/mk_organise/test/targets.txt",sep='\t', header=T) 
-#targets<-targets[targets$type %in% c("interest","contrast"),]
+# methylK_dir="/project/RDS-SMS-FFbigdata-RW/Epigenetics/tngbs/zacchatterton_tNGBS060219/mk_organise"
+# working_dir="/project/RDS-SMS-FFbigdata-RW/Epigenetics/tngbs/zacchatterton_tNGBS060219/mk_organise/test/output"
+# targets<-read.delim(file="/project/RDS-SMS-FFbigdata-RW/Epigenetics/tngbs/zacchatterton_tNGBS060219/mk_organise/test/targets.txt",sep='\t', header=T) 
 
 # module load R/3.6.3
 # Rscript --vanilla $methylK_dir/snr_calc.R $odir $methylK_dir $targets
@@ -115,7 +114,7 @@ for (z in 1:length(tiss_interest)){
 res<-res[-1,]
 
 # write results to file
-write.table(res,file=paste0(paste(tiss_interest, sep="", collapse=""),"_mkdf.txt"), sep='\t')
+write.table(res,file=paste0(paste(tiss_interest, sep="", collapse=""),"_mkdf.txt"), sep='\t', quote = FALSE)
 
 
 

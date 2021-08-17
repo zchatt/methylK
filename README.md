@@ -27,7 +27,6 @@ Background: DNA methylation is an epigenetic modification that is intricately in
 [R](https://www.r-project.org/) (3.6.3),
 [samtools](http://www.htslib.org/) (1.9),
 [trimmomatic](http://www.usadellab.org/cms/?page=trimmomatic) (0.36),
-[ngsutils](https://github.com/ngsutils/ngsutils)
 
 note - We have run the analysis on a Linux operating system. All of the software should all be accesible from $PATH
 
@@ -78,8 +77,11 @@ note - We have run the analysis on a Linux operating system. All of the software
 	# 6. Quantify tissue:interest from tissue:identify over signal-to-noise
 	Rscript --vanilla $methylK_dir/snr_quant.R $odir $methylK_dir $targets
 
-note - we provide the .kidx file (cell_methylotype.kidx) that can be used to quantify Neuron and Glia-cfDNA if the assays used within (Chatterton et al, Methods for detecting Brain-Cell derived Cell-Free DNA, 2020) have been applied to cfDNA. To do so uncomment line 112 in quant_mk_cfdna.sh.
+note 1. If the test data has run correctly then the fraction of reads assigned to our tissue:interest (eg."NeuNpos") within our "unknown" samples = 0.00564325
+	
+	grep -v "NA" $odir/NeuNpos_mkdf.txt | awk '{sum+=$8;} END{print sum;}'
 
+note 2. We provide the .kidx file (cell_methylotype.kidx) that can be used to quantify Neuron and Glia-cfDNA following bisulfite amplicon sequencing using the assays described in [(Chatterton et al,Front. Mol. Neurosci., 2021)](https://www.frontiersin.org/articles/10.3389/fnmol.2021.672614/full). To do so uncomment/ comment line 107/109 of quant_mk_cfdna.sh
 
 ## Step-by-step
 
@@ -138,9 +140,6 @@ Overview - The number of methylated cytosines within each assigned read are coun
 
 	# Run #
 	Rscript --vanilla $methylK_dir/snr_quant.R $odir $methylK_dir $targets
-
-note - The example data provided in methlK/test should result in the sample "unk_1" having 0.6% reads assigned to Neuron and 0.56% reads assigned to Neuron passing threshold (column sums).
-
 
 
 

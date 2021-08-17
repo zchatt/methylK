@@ -11,7 +11,6 @@ type samtools >/dev/null 2>&1 || { echo >&2 "samtools is required but not instal
 type kallisto >/dev/null 2>&1 || { echo >&2 "kallisto is required but not installed.  Aborting."; exit 1; }
 type trimmomatic >/dev/null 2>&1 || { echo >&2 "trimmomatic is required but not installed.  Aborting."; exit 1; }
 
-
 # Check that all values have been supplied
 if [[ $# -eq 0 ]] ; then
     echo 'No arguments supplied. Aborting.'
@@ -80,50 +79,6 @@ rename R2.fastq_truncated paired_truncated_R2.fastq *R2.fastq_truncated
 gzip *truncated_R1.fastq
 gzip *truncated_R2.fastq
 
-#######################################################
-### Truncate paired and trimmed reads - deprecated  ###
-#######################################################
-# cd $odir
-# # Ensure .fastq files are present and make lists for sample types "interest" & "contrast"
-# echo ""
-# echo "[ Checking all paired/trimmed .fastq.gz files are present ]"
-# echo ""
-
-# rm p_read1 p_read2 2> /dev/null
-# for i in $(awk '$3 ~ /identify/ {print $1}' $targets); do
-#     # make read list
-#     ls $odir/${i}.R1.fastq_paired.fq.gz >> p_read1
-#     ls $odir/${i}.R2.fastq_paired.fq.gz >> p_read2
-# if [ ! -f $(ls -d $odir/${i}.R1.fastq_paired.fq.gz) ]
-# then
-#     echo "$0: File '${i}' not found." >&2
-#   exit 1
-# fi
-# done
-
-# # Truncate reads
-# echo ""
-# echo "[ Truncating .fastq files ]"
-# echo ""
-
-# # read length to truncate to
-# R1_length=$read_length
-# R2_length=$read_length
-
-# # truncate reads
-# #parallel --xapply -j+0 --eta fastqutils truncate {1} $R1_length '>' {1.}_truncated :::: p_read1
-# #parallel --xapply -j+0 --eta fastqutils truncate {1} $R2_length '>' {1.}_truncated :::: p_read2
-# # run trimmomatic in parallel
-# parallel --xapply -j $njobs --eta trimmomatic CROP $read_length PE {1} {2} {1.}_truncated {1.}_untruncated {2.}_truncated {2.}_untruncated :::: p_read1 :::: p_read2
-
-# # rename truncated reads
-# rename R1.fastq_paired.fq_truncated paired_truncated_R1.fastq *R1.fastq_paired.fq_truncated
-# rename R2.fastq_paired.fq_truncated paired_truncated_R2.fastq *R2.fastq_paired.fq_truncated
-# # gzip files
-# gzip *truncated_R1.fastq
-# gzip *truncated_R2.fastq
-
-
 ############################################
 ### assign (pseudoalign) truncated reads ###
 ############################################
@@ -150,6 +105,8 @@ done
 
 # run kallisto quant in parallel
 parallel --xapply -j $njobs --eta kallisto quant -i $odir/master_methylotype.kidx -o {3} --pseudobam {1} {2} :::: pt_read1 :::: pt_read2 :::: mdir
+# index file to quantify Neuron and Glia-cfDNA following bisulfite amplicon sequencing using the assays described in (Chatterton et al,Front. Mol. Neurosci., 2021)
+#parallel --xapply -j $njobs --eta kallisto quant -i $methylK_dir/cell_methylotype.kidx -o {3} --pseudobam {1} {2} :::: pt_read1 :::: pt_read2 :::: mdir
 
 # convert pseudo.bam to pseudo.sam
 for file in $(cat mdir); do
