@@ -11,7 +11,6 @@ type bismark >/dev/null 2>&1 || { echo >&2 "bismark is required but not installe
 type samtools >/dev/null 2>&1 || { echo >&2 "samtools is required but not installed.  Aborting."; exit 1; }
 hash $PICARD_JAR >/dev/null 2>&1 || { echo >&2 "picard is required but not installed.  Aborting."; exit 1; }
 type bowtie2 >/dev/null 2>&1 || { echo >&2 "bowtie2 is required but not installed.  Aborting."; exit 1; }
-type ngsutils >/dev/null 2>&1 || { echo >&2 "ngsutils is required but not installed.  Aborting."; exit 1; }
 
 # Check that all values have been supplied
 if [[ $# -eq 0 ]] ; then
