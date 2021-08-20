@@ -30,9 +30,8 @@ Background: DNA methylation is an epigenetic modification that is intricately in
 
 	install.packages(c("plyr","dplyr","tidyr","data.table","ggplot2","gridExtra","scales","caret"))
 
-note - We have run the analysis on a Linux operating system. All of the software should all be accesible from $PATH
+note - All of the software should all be accesible from $PATH. We have run the analysis on a Linux OS (CentOS release 6.9, 2.6.32-696.16.1.el6.x86_64).
 
-	export PATH=ngsutils/bin:$PATH # ngsutils git
 	GATK_JAR=gatk
 	PICARD_JAR=picard
 	njobs=4 # Also set to make server happy when using parallel
