@@ -1,17 +1,17 @@
 # methylK 
-_methylK_ is a directory of scripts used within [(Chatterton et al,Front. Mol. Neurosci., 2021)](https://www.frontiersin.org/articles/10.3389/fnmol.2021.672614/full)
+_methylK_ is a directory of scripts used within [(Chatterton et al, Front. Mol. Neurosci., 2021)](https://www.frontiersin.org/articles/10.3389/fnmol.2021.672614/full)
 
-Background: DNA methylation is an epigenetic modification that is intricately involved in cell-specification and cell-function. Bisulfite conversion of DNA followed by Next Generation Sequencing (NGS) analyzes DNA methylation at the single molecule level. The cell-specificity of DNA methylation patterns can be used to identify the cell-of-origin of DNA molecules, such as the deconvolution the cell-of-origin of cell-free DNA (cfDNA). To acheive this, we binarize DNA methylation patterns of primary cells-types within genomic context, creating cell-specific DNA methylation reference genomes for the assignment of DNA fragments of unknown source (i.e. cfDNA) to their cell-of-origin.
+Background: DNA methylation is an epigenetic modification critical for cell-specification and cell-function that is covlently bound to cytosine.Bisulfite conversion of DNA followed by Next Generation Sequencing (NGS) produces single-base level DNA methylation information on NGS reads. Cell-specific DNA methylation patterns can be used to identify the cell-of-origin of DNA molecules, such as the origin of cell-free DNA (cfDNA) molecules. To acheive this, we binarize DNA methylation of primary cells-types within genomic context, creating cell-specific DNA methylation reference for the assignment of NGS reads mixed source (i.e. cfDNA) to their cell-of-origin.
 
 ## Instructions
 
 ### File Formats 
 
- targets: a tab-delimited table (.txt) with the headers "sample_seqname" "tissue" "type". Each sample to be analysed is represented by one row. The sample_seqname column refers to the sample names of the .fastq files i.e. "sample_seqname".R{1/2}.fastq.gz. The "tissue" column is used to define which tissue group this sample belongs and can be any value eg. "PBMC". The "type" column defines how that sample will be used within the analysis and can be one of 3 values "interest", "contrast" or "identify". For type "interest" and "contrast" a methylotype.fasta file will be made for each "tissue" x "type". 
+targets: a tab-delimited .txt file with headers "sample_seqname" "tissue" "type". One sample per row. The "sample_seqname" refers to the sample names eg. "sample_seqname".R{1/2}.fastq.gz. The "tissue" defines the tissue group eg. "PBMC". The "type" column defines the samples use in the analysis and are either "interest" or "contrast" (tissues to be deconvoluted) or "identify" eg. cfDNA.
 
- genome: reference genome file (.fa). Needs to sorted. This can be done using seqkit (seqkit sort -i in.fa -o out.fa)
+genome: reference genome file (.fa). Needs to sorted. This can be done using seqkit (seqkit sort -i in.fa -o out.fa)
 
- fastq: files need to be named "sample_seqname".R{1/2}.fastq.gz. 
+fastq: files need to be named "sample_seqname".R{1/2}.fastq.gz. 
 
  note - If you are starting from ".bed" or ".bedGraph" files need to be in the format chr,start,end,methylation_percentage
 
@@ -87,7 +87,12 @@ note 2. We provide the .kidx file (cell_methylotype.kidx) that can be used to qu
 ## Step-by-step
 
 ## 1. FASTQ to meth
-Overview - Alignment and DNA methylation extraction is performed on tissue:interest & tissue:contrast. If DNA methylation is alreadt  in either .tsv, .bedGraph or .bismark.cov format then begin at [meth to FASTA](#2-meth-to-fasta). For convenience we provide scripts used within [(Chatterton et al,Front. Mol. Neurosci., 2021)](https://www.frontiersin.org/articles/10.3389/fnmol.2021.672614/full) for the preparation of bisulfite genome (genome_prepare.sh) alignment and methylation calling using [Bismark](https://www.bioinformatics.babraham.ac.uk/projects/bismark/) (meth_trim_align_call.sh). Note: 1. NGS read quality should be ascertained prior to running using programs such as fastqc. 2. The .fastq files need to be named using the following convention "sample_seqname".R{1/2}.fastq.gz 3. The scripts perform alignment and calling of all samples of "types" (column 3 of targets.txt) "interest" and "contrast". 4. The NGS libraries were created with Illumina Nextera and are trimmed using these adapter sequences. Using the test data this should run in ~20mins using 4 CPU and 16Gb RAM.
+Overview - Alignment and DNA methylation extraction is performed on tissue:interest & tissue:contrast. If DNA methylation is already in either .tsv, .bedGraph or .bismark.cov format then begin at [meth to FASTA](#2-meth-to-fasta). For convenience we provide scripts used within [(Chatterton et al,Front. Mol. Neurosci., 2021)](https://www.frontiersin.org/articles/10.3389/fnmol.2021.672614/full) for the preparation of bisulfite genome [genome_prepare.sh](https://github.com/zchatt/methylK/blob/master/genome_prepare.sh) alignment and methylation calling using [Bismark](https://www.bioinformatics.babraham.ac.uk/projects/bismark/) [meth_trim_align_call.sh](https://github.com/zchatt/methylK/blob/master/meth_trim_align_call.sh). 
+
+note 1. NGS read quality should be ascertained prior to running using programs such as fastqc. 
+note 2. The .fastq files need to be named using the following convention "sample_seqname".R{1/2}.fastq.gz 
+note 3. The scripts perform alignment and calling of all samples tissue:interest & tissue:contrast, unless 6th argument is set to identify which runs tissue:identify.
+note 4. The test data should run in ~20 mins using 4 CPU and 16Gb RAM.
 
 	# Inputs #
 	methylK_dir=methylK/
@@ -104,9 +109,10 @@ Overview - Alignment and DNA methylation extraction is performed on tissue:inter
 	# $methylK_dir/fastq_to_bed.sh $methylK_dir $genome $sdir $odir $targets identify 
 
 ## 2. meth to FASTA
-Overview - Here we binerize the DNA methylation values depending on our "bin_threshold". For instance bin_threshold=50 results in any cytosine with DNA methylation >=50% being translated into a "C" with FASTA format, converesly cytosines with DNA methylation <50% are tranlsated into "T".The script will produce a FASTA file (methylotype.fasta) for each "tissue" (column 2 of targets.txt) of types (column 3 of targets.txt) "interest" and "contrast". In order to create a k-mer index of sample types "interest" and "contrast" we need to combine the methylotype.fasta files from each "tissue" into master_methylotype.fasta file. Base changes that are dependent on the DNA methylation of each tissue are introduced into the .fasta file. The base changes enable the DNA methylation to be contextualised within the genome sequence so that DNA methylation based k-mers can be characterised between "tissues". 
+Overview - DNA methylation fractional measurements are binarized eg. bin_threshold=50 results in any cytosine with DNA methylation < 50% being translated into a "T" within FASTA format. The script will produce a FASTA file (methylotype.fasta) for each tissue:interest & tissue:contrast that are combined and k-mers are indexed using [Kallisto](https://github.com/pachterlab/kallisto_paper_analysis) software.
 
-Note. We use [Kallisto](https://github.com/pachterlab/kallisto_paper_analysis) software to index k-mers from the master_methylotype.fasta file. It is therefore critical to only use cytosines with coverage accross all "tissues". Cytosines cannot be masked as [Kallisto](https://github.com/pachterlab/kallisto_paper_analysis) looks for ACGUT comptibility and if none is found, such as in the case of "N", the nucleotide is replaced with with a random nucleotide. Therefore we break-up the .fasta sequences at cytosine that do not have coverage accross all sample types "interest" and "contrast".
+note 1. Binarisation and insertion of DNA methylation contextualises it within the genome sequence that enable tissue/ cell-specific DNA methylation k-mers. 
+note 2. It is critical to only use cytosines with coverage accross all tissue:interest & tissue:contrast. Cytosines cannot be masked as [Kallisto](https://github.com/pachterlab/kallisto_paper_analysis) looks for ACGUT comptibility and if none is found, such as in the case of "N", the nucleotide is replaced with with a random nucleotide. To avoid this we break the FASTA sequences at cytosine without coverage accross all tissue:interest & tissue:contrast.
 
 	# Inputs #
 	genome_bismark=$odir/bismark_genome/Bisulfite_Genome
