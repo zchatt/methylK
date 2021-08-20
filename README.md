@@ -9,7 +9,7 @@ Background: DNA methylation is an epigenetic modification critical for cell-spec
 
 targets: a tab-delimited .txt file with headers "sample_seqname" "tissue" "type". One sample per row. The "sample_seqname" refers to the sample names eg. "sample_seqname".R{1/2}.fastq.gz. The "tissue" defines the tissue group eg. "PBMC". The "type" column defines the samples use in the analysis and are either "interest" or "contrast" (tissues to be deconvoluted) or "identify" eg. cfDNA.
 
-genome: reference genome file (.fa). Needs to sorted. This can be done using seqkit (seqkit sort -i in.fa -o out.fa)
+genome: sorted FASTA reference file. This can be done using seqkit (seqkit sort -i in.fa -o out.fa)
 
 fastq: files need to be named "sample_seqname".R{1/2}.fastq.gz. 
 
