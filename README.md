@@ -24,9 +24,11 @@ Background: DNA methylation is an epigenetic modification that is intricately in
 [parallel](https://www.gnu.org/software/parallel/) (20160222),
 [picard](https://broadinstitute.github.io/picard/) (2.7.1),
 [python](https://www.python.org/) (2.7.9),
-[R](https://www.r-project.org/) (3.6.3),
 [samtools](http://www.htslib.org/) (1.9),
-[trimmomatic](http://www.usadellab.org/cms/?page=trimmomatic) (0.36),
+[trimmomatic](http://www.usadellab.org/cms/?page=trimmomatic) (0.36) &
+[R](https://www.r-project.org/) (3.6.3). In addition the following [R](https://www.r-project.org/) packages should be installed;
+
+	install.packages(c("plyr","dplyr","tidyr","data.table","ggplot2","gridExtra","scales","caret"))
 
 note - We have run the analysis on a Linux operating system. All of the software should all be accesible from $PATH
 
