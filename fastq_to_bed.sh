@@ -42,7 +42,7 @@ if [ $6 == "identify" ]
   	echo 'Running on sample types "identify"'
 		# ensure R1 and R2 .fastq files are present and make read lists for sample types "identify"
 		rm read1
-		for FILES in $(awk '$3 ~ /interest|contrast/ {print $1}' $targets)
+		for FILES in $(awk '$3 ~ /identify/ {print $1}' $targets)
 		do
 		i=$sdir/${FILES}.R1.fastq.gz
 		ls -d ${i} >> read1
@@ -54,7 +54,7 @@ if [ $6 == "identify" ]
 		done
 
 		rm read2
-		for FILES in $(awk '$3 ~ /interest|contrast/ {print $1}' $targets)
+		for FILES in $(awk '$3 ~ /identify/ {print $1}' $targets)
 		do
 		i=$sdir/${FILES}.R2.fastq.gz
 		ls -d ${i} >> read2
