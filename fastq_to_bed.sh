@@ -17,7 +17,7 @@ if [[ $# -eq 0 ]] ; then
     echo 'No arguments supplied. Aborting.'
     exit 1
 fi
-if [ "$#" -ne 5 ]; then
+if [ "$#" -lt 5 ]; then
   echo "The 5 required arguments not supplied. Aborting." >&2
   exit 1
 fi
@@ -37,42 +37,89 @@ bowtie2=$(dirname $(which bowtie2))
 #set this to a number so that the server is happy
 export njobs=4
 
-# ensure R1 and R2 .fastq files are present and make read lists for sample types "interest" & "contrast"
-rm read1
-for FILES in $(awk '$3 ~ /interest|contrast/ {print $1}' $targets)
-do
-i=$sdir/${FILES}.R1.fastq.gz
-ls -d ${i} >> read1
-if [ ! -f $(ls -d $sdir/${FILES}.R1.fastq.gz) ]
-then
-echo "$0: File '${i}' not found." >&2
-exit 1
+if [ $6 == "identify" ]
+  then
+  	echo 'Running on sample types "identify"'
+		# ensure R1 and R2 .fastq files are present and make read lists for sample types "identify"
+		rm read1
+		for FILES in $(awk '$3 ~ /interest|contrast/ {print $1}' $targets)
+		do
+		i=$sdir/${FILES}.R1.fastq.gz
+		ls -d ${i} >> read1
+		if [ ! -f $(ls -d $sdir/${FILES}.R1.fastq.gz) ]
+		then
+		echo "$0: File '${i}' not found." >&2
+		exit 1
+		fi
+		done
+
+		rm read2
+		for FILES in $(awk '$3 ~ /interest|contrast/ {print $1}' $targets)
+		do
+		i=$sdir/${FILES}.R2.fastq.gz
+		ls -d ${i} >> read2
+		if [ ! -f $(ls -d $sdir/${FILES}.R2.fastq.gz) ]
+		then
+		echo "$0: File '${i}' not found." >&2
+		exit 1
+		fi
+		done
+
+		###########
+		### RUN ###
+		###########
+		# running from the output folder 
+		# Prepare bisulfite genome from .fasta, index and create a dictionary necessary for .vcf to .fasta conversion
+		mkdir ./bismark_genome
+		ln -sf $genome ./bismark_genome/
+		$methylK_dir/genome_prepare.sh ./bismark_genome/
+
+		# Perform bisulfite sequencing alignment and DNA methylation calling
+		$methylK_dir/meth_trim_align_call.sh ./bismark_genome/ $bowtie2 $sdir $methylK_dir
+
+		# cleanup
+		rm bam_list out_dir output_log
+
+	else
+		 echo 'Running on sample types "interest" & "contrast"'
+		# ensure R1 and R2 .fastq files are present and make read lists for sample types "interest" & "contrast"
+		rm read1
+		for FILES in $(awk '$3 ~ /interest|contrast/ {print $1}' $targets)
+		do
+		i=$sdir/${FILES}.R1.fastq.gz
+		ls -d ${i} >> read1
+		if [ ! -f $(ls -d $sdir/${FILES}.R1.fastq.gz) ]
+		then
+		echo "$0: File '${i}' not found." >&2
+		exit 1
+		fi
+		done
+
+		rm read2
+		for FILES in $(awk '$3 ~ /interest|contrast/ {print $1}' $targets)
+		do
+		i=$sdir/${FILES}.R2.fastq.gz
+		ls -d ${i} >> read2
+		if [ ! -f $(ls -d $sdir/${FILES}.R2.fastq.gz) ]
+		then
+		echo "$0: File '${i}' not found." >&2
+		exit 1
+		fi
+		done
+
+		###########
+		### RUN ###
+		###########
+		# running from the output folder 
+		# Prepare bisulfite genome from .fasta, index and create a dictionary necessary for .vcf to .fasta conversion
+		mkdir ./bismark_genome
+		ln -sf $genome ./bismark_genome/
+		$methylK_dir/genome_prepare.sh ./bismark_genome/
+
+		# Perform bisulfite sequencing alignment and DNA methylation calling
+		$methylK_dir/meth_trim_align_call.sh ./bismark_genome/ $bowtie2 $sdir $methylK_dir
+
+		# cleanup
+		rm bam_list out_dir output_log
+
 fi
-done
-
-rm read2
-for FILES in $(awk '$3 ~ /interest|contrast/ {print $1}' $targets)
-do
-i=$sdir/${FILES}.R2.fastq.gz
-ls -d ${i} >> read2
-if [ ! -f $(ls -d $sdir/${FILES}.R2.fastq.gz) ]
-then
-echo "$0: File '${i}' not found." >&2
-exit 1
-fi
-done
-
-###########
-### RUN ###
-###########
-# running from the output folder 
-# Prepare bisulfite genome from .fasta, index and create a dictionary necessary for .vcf to .fasta conversion
-mkdir ./bismark_genome
-ln -sf $genome ./bismark_genome/
-$methylK_dir/genome_prepare.sh ./bismark_genome/
-
-# Perform bisulfite sequencing alignment and DNA methylation calling
-$methylK_dir/meth_trim_align_call.sh ./bismark_genome/ $bowtie2 $sdir $methylK_dir
-
-# cleanup
-rm bam_list out_dir output_log
