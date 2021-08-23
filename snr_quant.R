@@ -30,7 +30,8 @@ for (i in c(2)){
 
 working_dir=args[1]
 methylK_dir=args[2]
-targets=read.delim(file=args[3],sep='\t', header=T) #targets file should have column with headers 1) "sample_name", 2) "tissue" , 3) "counts_fq"
+snr_thresh_path=args[3]
+targets=read.delim(file=args[4],sep='\t', header=T) #targets file should have column with headers 1) "sample_name", 2) "tissue" , 3) "counts_fq"
 source(paste0(methylK_dir,"/","read_cgcnt.R"))
 
 #############################
@@ -46,8 +47,6 @@ library(tidyr)
 # read data
 setwd(working_dir)
 cg_count=read_cgcnt(working_dir)
-snr_thresh_path<-c(working_dir)
-
 tiss_interest<-unique(as.character(targets$tissue[targets$type == "interest"]))
 targets<-targets[targets$type %in% c("identify"),]
 
