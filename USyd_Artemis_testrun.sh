@@ -49,4 +49,4 @@ Rscript --vanilla $methylK_dir/snr_calc.R $odir $methylK_dir $targets
 
 $methylK_dir/quant_mk_cfdna.sh $methylK_dir $targets $sdir $odir $read_length
 
-Rscript --vanilla $methylK_dir/snr_quant.R $odir $methylK_dir $targets
+Rscript --vanilla $methylK_dir/snr_quant.R $odir $methylK_dir $odir $targets
