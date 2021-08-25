@@ -85,8 +85,6 @@ note 1. If the test data has run correctly then the fraction of reads assigned t
 	
 	grep -v "NA" $odir/NeuNpos_mkdf.txt | awk '{sum+=$8;} END{print sum;}'
 
-note 2. We provide the .kidx file (cell_methylotype.kidx) that can be used to quantify Neuron and Glia-cfDNA following bisulfite amplicon sequencing using the assays described in [(Chatterton et al,Front. Mol. Neurosci., 2021)](https://www.frontiersin.org/articles/10.3389/fnmol.2021.672614/full). To do so uncomment/ comment line 107/109 of quant_mk_cfdna.sh
-
 ## Step-by-step
 
 ## 1. FASTQ to meth
