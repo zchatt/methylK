@@ -146,6 +146,8 @@ Overview - tissue:identify PE reads (.fastq) are truncated to $read_length and t
 
 	# Run #
 	$methylK_dir/quant_mk_cfdna.sh $methylK_dir $targets $sdir $odir $read_length
+	# note - A pre-computed .kidx file is supplied for PBMC, Glia and Neuron. To use simply set the sixth argument eg.
+	# $methylK_dir/quant_mk_cfdna.sh $methylK_dir $targets $sdir $odir $read_length cell_methylotype.kidx
 
 ## 6. Quantify tissue:interest from tissue:identify over signal-to-noise
 Overview - The number of methylated cytosines within each assigned read are counted and the proportion of assigned reads with co-methylation events above the signal-to-noise threshold are defined within the "frac_upsdfq_thresh" for all tissue:interest results files "\_mkdf.txt". 
