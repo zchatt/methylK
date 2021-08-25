@@ -76,7 +76,7 @@ note - All of the software should all be accesible from $PATH. We have run the a
 	$methylK_dir/quant_mk_cfdna.sh $methylK_dir $targets $sdir $odir $read_length
 	
 	# 6. Quantify tissue:interest from tissue:identify over signal-to-noise
-	Rscript --vanilla $methylK_dir/snr_quant.R $odir $methylK_dir $targets
+	Rscript --vanilla $methylK_dir/snr_quant.R $odir $methylK_dir $odir $targets
 
 note 1. If the test data has run correctly then the fraction of reads assigned to our tissue:interest (eg."NeuNpos") within our "unknown" samples = 0.00564325
 	
