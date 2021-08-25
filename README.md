@@ -41,18 +41,21 @@ note - All of the software should all be accesible from $PATH. We have run the a
 	chmod +x methylK/*
 
 ## Quickrun
-	# Inputs #
-	methylK_dir=$(readlink -f methylK)
-	genome=$methylK_dir/tNGBS_n33_lambda1.3.fa
+	# Inputs for testing
 	# note - the methylK/test directory contains .fastq files and targets.txt that can be used to test scripts
-	sdir=$methylK_dir/test # sample directory containing all PE .fastq files 
-	targets=$methylK_dir/test/targets.txt # location of targets file
+	methylK_dir=$(readlink -f methylK)
+	genome=$methylK_dir/tNGBS_n33_lambda1.3.fa # reference genome
+	sdir=$methylK_dir/test # directory containing all PE .fastq files 
+	targets=$methylK_dir/test/targets.txt # targets file
 	odir=$methylK_dir/test/output # ouput directory is where all results will be written
+
+	# Inputs for testing relative to above paths
 	mkdir $odir
+	snr_thresh_path=$odir # location of SNR threshold files. For convenience we also supply the pre-computed Glia and Neuron SNR thresholds within $methylK_dir/GN_thresh_snr
 	genome_bismark=$odir/bismark_genome/Bisulfite_Genome
 	bed_location=$odir/bismark_results
 
-	# hard-coded values
+	# hard-coded thresholds & values
 	cov_threshold=5 # coverage threshold in order to include cytosine in analysis
 	bin_threshold=50 # methylation % threshold for binarizing DNA methylation i.e. < 50% = T, > 50% = C
 	read_length=25 # length that reads will be truncated. This should be the shortest read length
@@ -76,7 +79,7 @@ note - All of the software should all be accesible from $PATH. We have run the a
 	$methylK_dir/quant_mk_cfdna.sh $methylK_dir $targets $sdir $odir $read_length
 	
 	# 6. Quantify tissue:interest from tissue:identify over signal-to-noise
-	Rscript --vanilla $methylK_dir/snr_quant.R $odir $methylK_dir $odir $targets
+	Rscript --vanilla $methylK_dir/snr_quant.R $odir $methylK_dir $snr_thresh_path $targets
 
 note 1. If the test data has run correctly then the fraction of reads assigned to our tissue:interest (eg."NeuNpos") within our "unknown" samples = 0.00564325
 	
@@ -87,7 +90,7 @@ note 2. We provide the .kidx file (cell_methylotype.kidx) that can be used to qu
 ## Step-by-step
 
 ## 1. FASTQ to meth
-Overview - Alignment and DNA methylation extraction is performed on tissue:interest & tissue:contrast. If DNA methylation is already in either .tsv, .bedGraph or .bismark.cov format then begin at [meth to FASTA](#2-meth-to-fasta). For convenience we provide scripts used within [(Chatterton et al,Front. Mol. Neurosci., 2021)](https://www.frontiersin.org/articles/10.3389/fnmol.2021.672614/full) for the preparation of bisulfite genome [genome_prepare.sh](https://github.com/zchatt/methylK/blob/master/genome_prepare.sh) alignment and methylation calling using [Bismark](https://www.bioinformatics.babraham.ac.uk/projects/bismark/) [meth_trim_align_call.sh](https://github.com/zchatt/methylK/blob/master/meth_trim_align_call.sh). 
+Overview - Alignment and DNA methylation extraction is performed on tissue:interest & tissue:contrast. If DNA methylation is already in either .tsv, .bedGraph or .bismark.cov format then begin at [meth to FASTA](#2-meth-to-fasta). For convenience we provide scripts used within [(Chatterton et al,Front. Mol. Neurosci., 2021)](https://www.frontiersin.org/articles/10.3389/fnmol.2021.672614/full) for the [preparation of bisulfite genome] (https://github.com/zchatt/methylK/blob/master/genome_prepare.sh), and, the [alignment and methylation calling](https://github.com/zchatt/methylK/blob/master/meth_trim_align_call.sh) using [Bismark](https://www.bioinformatics.babraham.ac.uk/projects/bismark/).
 
 note 1. NGS read quality should be ascertained prior to running using programs such as fastqc. 
 note 2. The .fastq files need to be named using the following convention "sample_seqname".R{1/2}.fastq.gz 
@@ -139,7 +142,7 @@ Overview -  The number of cytosine's and guanines are counted within each read a
 	Rscript --vanilla $methylK_dir/snr_calc.R $odir $methylK_dir $targets
 
 ## 5. Assignment of tissue:identify
-Overview - The paried-end .fastq files from the tisue type "identify" are truncated to $read_length and are then assigned to tissue type "interest" and "contrast" using the k-mer index (above). The number of methylated cytosines within each assigned read are then counted and the proportion of assigned reads with co-methylation events above the signal-to-noise threshold are defined as tissue:interest.
+Overview - tissue:identify PE reads (.fastq) are truncated to $read_length and then assigned to tissue:interest or tissue:interest is common k-mers are found using the k-mer index (above). The number of methylated cytosines within each assigned read are then counted and the proportion of assigned reads with co-methylation events >SNR threshold are defined tissue:interest.
 
 	# Run #
 	$methylK_dir/quant_mk_cfdna.sh $methylK_dir $targets $sdir $odir $read_length
@@ -148,7 +151,5 @@ Overview - The paried-end .fastq files from the tisue type "identify" are trunca
 Overview - The number of methylated cytosines within each assigned read are counted and the proportion of assigned reads with co-methylation events above the signal-to-noise threshold are defined within the "frac_upsdfq_thresh" for all tissue:interest results files "\_mkdf.txt". 
 
 	# Run #
-	Rscript --vanilla $methylK_dir/snr_quant.R $odir $methylK_dir $targets
-
-
-
+	# note - Pre-computed Glia and Neuron SNR thresholds can be also set (snr_thresh_path=$methylK_dir/GN_thresh_snr)
+	Rscript --vanilla $methylK_dir/snr_quant.R $odir $methylK_dir $snr_thresh_path $targets
