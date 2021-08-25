@@ -104,9 +104,14 @@ fi
 done
 
 # run kallisto quant in parallel
-parallel --xapply -j $njobs --eta kallisto quant -i $odir/master_methylotype.kidx -o {3} --pseudobam {1} {2} :::: pt_read1 :::: pt_read2 :::: mdir
-# index file to quantify Neuron and Glia-cfDNA following bisulfite amplicon sequencing using the assays described in (Chatterton et al,Front. Mol. Neurosci., 2021)
-#parallel --xapply -j $njobs --eta kallisto quant -i $methylK_dir/cell_methylotype.kidx -o {3} --pseudobam {1} {2} :::: pt_read1 :::: pt_read2 :::: mdir
+if [ $6 == "cell_methylotype.kidx" ]
+  then
+  	echo 'cell_methylotype.kidx has been set'
+    parallel --xapply -j $njobs --eta kallisto quant -i $methylK_dir/cell_methylotype.kidx -o {3} --pseudobam {1} {2} :::: pt_read1 :::: pt_read2 :::: mdir
+  else
+    echo 'cell_methylotype.kidx has not been set, attempting to use $odir/master_methylotype.kidx'
+    parallel --xapply -j $njobs --eta kallisto quant -i $odir/master_methylotype.kidx -o {3} --pseudobam {1} {2} :::: pt_read1 :::: pt_read2 :::: mdir
+fi
 
 # convert pseudo.bam to pseudo.sam
 for file in $(cat mdir); do
