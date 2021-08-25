@@ -90,7 +90,7 @@ note 2. We provide the .kidx file (cell_methylotype.kidx) that can be used to qu
 ## Step-by-step
 
 ## 1. FASTQ to meth
-Overview - Alignment and DNA methylation extraction is performed on tissue:interest & tissue:contrast. If DNA methylation is already in either .tsv, .bedGraph or .bismark.cov format then begin at [meth to FASTA](#2-meth-to-fasta). For convenience we provide scripts used within [(Chatterton et al,Front. Mol. Neurosci., 2021)](https://www.frontiersin.org/articles/10.3389/fnmol.2021.672614/full) for the [preparation of bisulfite genome] (https://github.com/zchatt/methylK/blob/master/genome_prepare.sh), and, the [alignment and methylation calling](https://github.com/zchatt/methylK/blob/master/meth_trim_align_call.sh) using [Bismark](https://www.bioinformatics.babraham.ac.uk/projects/bismark/).
+Overview - Alignment and DNA methylation extraction is performed on tissue:interest & tissue:contrast. If DNA methylation is already in either .tsv, .bedGraph or .bismark.cov format then begin at [meth to FASTA](#2-meth-to-fasta). For convenience we provide scripts used within [(Chatterton et al,Front. Mol. Neurosci., 2021)](https://www.frontiersin.org/articles/10.3389/fnmol.2021.672614/full) for the [preparation of bisulfite genome](https://github.com/zchatt/methylK/blob/master/genome_prepare.sh), and, the [alignment and methylation calling](https://github.com/zchatt/methylK/blob/master/meth_trim_align_call.sh) using [Bismark](https://www.bioinformatics.babraham.ac.uk/projects/bismark/).
 
 note 1. NGS read quality should be ascertained prior to running using programs such as fastqc. 
 note 2. The .fastq files need to be named using the following convention "sample_seqname".R{1/2}.fastq.gz 
