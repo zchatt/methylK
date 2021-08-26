@@ -20,18 +20,21 @@ GATK_JAR=gatk
 PICARD_JAR=picard
 njobs=4
 
-# Inputs #
-methylK_dir=$(readlink -f methylK)
-genome=$methylK_dir/tNGBS_n33_lambda1.3.fa
+# Inputs for testing
 # note - the methylK/test directory contains .fastq files and targets.txt that can be used to test scripts
-sdir=$methylK_dir/test # sample directory containing all PE .fastq files 
-targets=$methylK_dir/test/targets.txt # location of targets file
+methylK_dir=$(readlink -f methylK)
+genome=$methylK_dir/tNGBS_n33_lambda1.3.fa # reference genome
+sdir=$methylK_dir/test # directory containing all PE .fastq files 
+targets=$methylK_dir/test/targets.txt # targets file
 odir=$methylK_dir/test/output # ouput directory is where all results will be written
+
+# Inputs for testing relative to above paths
 mkdir $odir
+snr_thresh_path=$odir # location of SNR threshold files. For convenience we also supply the pre-computed Glia and Neuron SNR thresholds within $methylK_dir/GN_thresh_snr
 genome_bismark=$odir/bismark_genome/Bisulfite_Genome
 bed_location=$odir/bismark_results
 
-# hard-coded thresholds/ values
+# hard-coded thresholds & values
 cov_threshold=5 # coverage threshold in order to include cytosine in analysis
 bin_threshold=50 # methylation % threshold for binarizing DNA methylation i.e. < 50% = T, > 50% = C
 read_length=25 # length that reads will be truncated. This should be the shortest read length
@@ -49,4 +52,4 @@ Rscript --vanilla $methylK_dir/snr_calc.R $odir $methylK_dir $targets
 
 $methylK_dir/quant_mk_cfdna.sh $methylK_dir $targets $sdir $odir $read_length
 
-Rscript --vanilla $methylK_dir/snr_quant.R $odir $methylK_dir $odir $targets
+Rscript --vanilla $methylK_dir/snr_quant.R $odir $methylK_dir $snr_thresh_path $targets
