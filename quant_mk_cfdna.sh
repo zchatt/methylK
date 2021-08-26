@@ -16,7 +16,7 @@ if [[ $# -eq 0 ]] ; then
     echo 'No arguments supplied. Aborting.'
     exit 1
 fi
-if [ "$#" -ne 5 ]; then
+if [ "$#" -lt 5 ]; then
   echo "The 5 required arguments not supplied. Aborting." >&2
   exit 1
 fi
