@@ -77,10 +77,10 @@ df$frac_upsdfq<-as.numeric(as.character(df$u_psdcnt))/as.numeric(as.character(df
 ###########################
 
 df = df %>% complete(sample_name, nesting(assay_long,counts,assay,psd_cell))
-res<-c("counts","assay_long","sample_name","assay","psd_cell","frac_upsdfq","frac_upsdfq_thresh")
 col_interest<-c("counts","assay_long","sample_name","assay","psd_cell","frac_upsdfq","frac_upsdfq_thresh")
 for (z in 1:length(tiss_interest)){
   tryCatch({ 
+    res<-c("counts","assay_long","sample_name","assay","psd_cell","frac_upsdfq","frac_upsdfq_thresh")
     cell1<-tiss_interest[z]
     
     # COI file name
@@ -107,16 +107,10 @@ for (z in 1:length(tiss_interest)){
     d1<-d1[,col_interest]
     res<-rbind(res,d1)
     
+    # write results to file
+    res<-res[-1,]
+    write.table(res,file=paste0(paste(tiss_interest[z], sep="", collapse=""),"_mkdf.txt"), sep='\t', quote = FALSE)
+
   },
   error=function(e){})
 }
-res<-res[-1,]
-
-# write results to file
-write.table(res,file=paste0(paste(tiss_interest, sep="", collapse=""),"_mkdf.txt"), sep='\t', quote = FALSE)
-
-
-
-
-
-
