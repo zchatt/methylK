@@ -107,7 +107,9 @@ done
 if [ $6 == "cell_methylotype.kidx" ]
   then
   	echo 'cell_methylotype.kidx has been set'
-    parallel --xapply -j $njobs --eta kallisto quant -i $methylK_dir/cell_methylotype.kidx -o {3} --pseudobam {1} {2} :::: pt_read1 :::: pt_read2 :::: mdir
+    # kallisto/0.46.0 command. Note the cell_methylotype.kidx was made using kallisto/0.43.1, fastq therefore need to be quantified using kallisto/0.43.1
+    # parallel --xapply -j $njobs --eta kallisto quant -i $methylK_dir/cell_methylotype.kidx -o {3} --pseudobam {1} {2} :::: pt_read1 :::: pt_read2 :::: mdir
+    parallel --xapply -j $njobs --eta kallisto quant -i $kidx_cell -o {3} --pseudobam {1} {2} '>' {3}/pseudoalignments.sam :::: pt_read1 :::: pt_read2 :::: mdir
   else
     echo 'cell_methylotype.kidx has not been set, attempting to use $odir/master_methylotype.kidx'
     parallel --xapply -j $njobs --eta kallisto quant -i $odir/master_methylotype.kidx -o {3} --pseudobam {1} {2} :::: pt_read1 :::: pt_read2 :::: mdir
@@ -115,7 +117,10 @@ fi
 
 # convert pseudo.bam to pseudo.sam
 for file in $(cat mdir); do
+# for kallisto/0.46.0 
 samtools view $file/pseudoalignments.bam >> $(basename ${file%_out}).pseudoalignments.sam
+# for kallisto/0.43.1
+mv $file/pseudoalignments.sam $(basename ${file%_out}).pseudoalignments.sam
 done
 
 # count unique pseduoaligned reads and total pseudoaligned reads

@@ -1,5 +1,7 @@
 #!/usr/bin/env Rscript
 args = commandArgs(trailingOnly=TRUE)
+library(tidyr)
+library(ggplot2)
 
 ####################
 ###  Run Example ###
@@ -26,13 +28,23 @@ setwd(args[1])
 assay=read.delim(file=args[2], sep='\t', header=TRUE)
 load(args[3])
 
-WD="/Users/zacc/Documents/MtSinai/Codes/tNGBS/kmer_tngbs_codes/FTD_cfDNA/CX_reports/"
+#WD="/Users/zacc/Documents/MtSinai/Codes/tNGBS/kmer_tngbs_codes/FTD_cfDNA/CX_reports/"
+WD="/Users/zacc/USyd/MRI&CFDNA/manuscript/dementia_ctr/"
 assay="/Users/zacc/new_methylK/assay_description_small.txt"
-Rdata="/Users/zacc/Documents/MtSinai/Codes/tNGBS/kmer_tngbs_codes/FTD_cfDNA/CX_reports/tngbs_cfdna_dataframes.Rdata"
+#Rdata="/Users/zacc/Documents/MtSinai/Codes/tNGBS/kmer_tngbs_codes/FTD_cfDNA/CX_reports/tngbs_cfdna_dataframes.Rdata"
+Rdata="/Users/zacc/tngbs_cfdna_dataframes.Rdata"
 
 setwd(WD)
 assay=read.delim(file=assay, sep='\t', header=TRUE)
 load(Rdata)
+
+#########################################
+### Create data.frame from CX reports ###
+#########################################
+
+pbmc <- row.names(targets)[targets$project == "Breachers" & targets$tissue == "PBMC" & targets$sample_name != "3E02-10-1"]
+cfdna <- row.names(targets)[targets$project == "Breachers" & targets$tissue == "Plasma"]
+data.cov <- data.cov[,colnames(data.cov) %in% c(pbmc,cfdna)]
 
 ########################################
 ### Weighted Fraction of Reads (WFR) ###
@@ -44,12 +56,14 @@ dat<-data.cov[-which(ind == 0),]
 idat<-tngbs.info[-which(ind == 0),]
 
 #summarize for each assay
-sum.dat<-aggregate(dat, by=list(Category=idat$V1), FUN=sum)
-a1<-sum.dat$Category
+sum.dat <-  aggregate(dat, by=list(Category=idat$V1), FUN=sum)
 
-# get assay names
+# ensure same assays in assay and coverage files
 assay<-as.data.frame(as.matrix(assay))
+assay <- assay[-which(assay$FASTA_name %in% c("Lambda_1","Lambda_3")),]
 row.names(assay)<-assay$FASTA_name
+sum.dat <- sum.dat[sum.dat$Category %in% row.names(assay), ]
+a1<-sum.dat$Category
 assay<-assay[as.character(a1),]
 
 # order by assay size
@@ -69,20 +83,97 @@ a.name<-a.name$Gene
 
 pdat[pdat==0]<-1
 
-pdf(file="Coverage_tngbs_populationbyassay.pdf")
-seq1<-c(seq(1,10,10/1) %o% 10^(1:10))
-seq1<-seq1[seq1 < max(pdat)]
-boxplot(t(pdat), use.cols= TRUE, ylab="" , type = "p", col="grey", boxwex=0.4 , main="",
-        log="y",axes=FALSE, xlab= "",pch=16, outcex=0.5,col.axis = "grey", cex = 1,
-        font = 2, cex=0.5)
-axis(2, at = seq1, labels = seq1)
-axis(1, at = c(1:nrow(pdat)), labels = a.name,cex.axis=0.5,las=2)
-mtext("Assay", side = 1, line = 3.5, cex = 1, font = 1)
-mtext("Coverage", side = 2, line = 2.5, cex = 1, font = 1)
-dev.off()
+# Boxplots of coverage
+dplot <- as.data.frame(t(pdat))
+data_long <- gather(dplot, condition, measurement,factor_key=TRUE)
+data_long <- data_long[complete.cases(data_long),]
 
-# weight each assay by total sequencing reads observed in population 1
+g1 <- ggplot(data_long, aes(x = reorder(condition, measurement, FUN = median), y = measurement)) + 
+  geom_point(alpha=0.5) + 
+  geom_boxplot(alpha=0.6,outlier.alpha=0,) + ylab("Reads") + theme_bw() + xlab("Assay") + 
+  theme(legend.position="none", axis.text.x=element_blank()) +  scale_y_continuous(trans='log2')
+
+# weight each assay by total sequencing reads observed in population 1 = WR
 sum.dat.weighted<-apply(sum.dat,2,function(x) x*as.numeric(as.character(assay$weights)))
+
+# Plots of each WR for pbmc and cfDNA
+dplot <- as.data.frame(t(sum.dat.weighted[,pbmc]))
+colnames(dplot) <- assay$width
+data_long <- gather(dplot, condition, measurement,factor_key=TRUE)
+data_long <- data_long[complete.cases(data_long),]
+
+data_long$condition <- factor(data_long$condition, 
+                              levels = levels(data_long$condition)[order(as.numeric(levels(data_long$condition)))])
+
+data_long$condition <- as.numeric(data_long$condition)
+
+ggplot(data_long,aes(x = condition, y = measurement)) + 
+  geom_point(alpha=0.5) + 
+  geom_smooth(colour="darkgoldenrod1", size=1.5, method="loess", degree=0, 
+              span=0.2, se=FALSE) +
+  #geom_boxplot(alpha=0.6,outlier.alpha=0,) + 
+  ylab("Reads") + theme_bw() + xlab("Assay") + 
+  theme(legend.position="none") +  scale_y_continuous(trans='log2')
+
+dplot <- as.data.frame(t(sum.dat.weighted[,cfdna]))
+colnames(dplot) <- assay$width
+data_long <- gather(dplot, condition, measurement,factor_key=TRUE)
+data_long <- data_long[complete.cases(data_long),]
+
+data_long$condition <- factor(data_long$condition, 
+                              levels = levels(data_long$condition)[order(as.numeric(levels(data_long$condition)))])
+
+data_long$condition <- as.numeric(data_long$condition)
+
+ggplot(data_long,aes(x = condition, y = measurement)) + 
+  geom_point(alpha=0.5) + 
+  geom_smooth(colour="darkgoldenrod1", size=1.5, method="loess", degree=0, 
+              span=0.2, se=FALSE) +
+  #geom_boxplot(alpha=0.6,outlier.alpha=0,) + 
+  ylab("Reads") + theme_bw() + xlab("Assay") + 
+  theme(legend.position="none") +  scale_y_continuous(trans='log2')
+
+
+
+library(zoo)
+dplot <- as.data.frame(t(sum.dat.weighted[,cfdna]))
+colnames(dplot) <- assay$width
+data_long <- gather(dplot, condition, measurement,factor_key=TRUE)
+data_long <- data_long[complete.cases(data_long),]
+data_long$condition <- as.numeric(as.character(data_long$condition))
+data_long <- data_long[order(data_long$condition),]
+
+data_long %>% group_by(condition) %>% 
+  summarise(Mean=mean(measurement)) %>% ggplot(aes(x = condition, y = Mean)) + 
+  geom_point(alpha=0.5)
+
+dplot <- as.data.frame(t(sum.dat.weighted[,pbmc]))
+colnames(dplot) <- assay$width
+data_long <- gather(dplot, condition, measurement,factor_key=TRUE)
+data_long <- data_long[complete.cases(data_long),]
+data_long$condition <- as.numeric(as.character(data_long$condition))
+data_long <- data_long[order(data_long$condition),]
+
+data_long %>% group_by(condition) %>% 
+  summarise(Mean=mean(measurement)) %>% ggplot(aes(x = condition, y = Mean)) + 
+  geom_point(alpha=0.5)
+
+
+rollmean(data_long$measurement, data_long$condition)
+
+
+plot(rollmean(data_long$measurement, data_long$condition),
+     data_long$condition)
+
+dplot <- as.data.frame(t(sum.dat.weighted[,pbmc]))
+
+
+# sum of weighted fraction >= 253bp: < 170bp
+ab.200<-sum.dat.weighted[which(as.numeric(as.character(assay$width)) == 253),]
+be.200<-colSums(sum.dat.weighted[which(as.numeric(as.character(assay$width)) < 170),])
+cf.c.ratio<-ab.200/be.200
+
+
 
 # sum of weighted fraction >= 253bp: < 170bp
 ab.200<-sum.dat.weighted[which(as.numeric(as.character(assay$width)) == 253),]
