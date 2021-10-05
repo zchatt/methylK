@@ -20,7 +20,7 @@ fastq: files need to be named "sample_seqname".R{1/2}.fastq.gz.
 [bismark](https://www.bioinformatics.babraham.ac.uk/projects/bismark/)  (0.18.2),
 [bowtie2](http://bowtie-bio.sourceforge.net/bowtie2/index.shtml) (2.2.5),
 [gatk](https://gatk.broadinstitute.org/hc/en-us) (3.6.0),
-[kallisto](https://github.com/pachterlab/kallisto_paper_analysis) (0.46.0),
+[kallisto](https://github.com/pachterlab/kallisto_paper_analysis) (0.43.1),
 [parallel](https://www.gnu.org/software/parallel/) (20160222),
 [picard](https://broadinstitute.github.io/picard/) (2.7.1),
 [python](https://www.python.org/) (2.7.9),

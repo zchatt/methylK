@@ -10,7 +10,7 @@ module load bismark/0.18.2
 module load samtools/1.9
 module load picard/2.7.1
 module load gatk/3.6.0 # required by vcf2fasta.sh
-module load kallisto
+module load kallisto/0.43.1
 module load python/2.7.9
 module load R/3.6.3
 module load bowtie2/2.2.5
