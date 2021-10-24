@@ -50,13 +50,18 @@ perl -pi -e 's/\r\n/\n/g' $targets
 ### Index k-mers wih Kallisto ###
 #################################  
 # set k-mer length
-if ($read_length > 30);
+if (( $read_length > 30 ));
 then
-  k_length=31
+k_length=31
+echo "read length is >30, k-mer set to" $k_length
+elif [ $(($read_length%2)) -eq 0 ]
+then
+k_length=$(echo $read_length | bc -l | awk '{printf("%.0f\n", $1)}' | awk '{$0=int($0-1)}1')
+echo "read length is <31 and even, k-mer set to" $k_length
 else
-  k_length=$read_length
+k_length=$read_length
+echo "read length is <31 and odd, k-mer set to" $k_length
 fi
-rm "30" 2> /dev/null
 
 echo ""
 echo "[ Indexing k-mers of ${k_length} length ]"
