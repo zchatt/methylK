@@ -127,11 +127,15 @@ echo $(basename ${s%.paired_truncated_R1.fastq.gz}) >> samp
 done
 
 # run kallisto quant in parallel
-parallel --xapply -j $njobs --eta kallisto quant -i $odir/master_methylotype.kidx -o {3} --pseudobam {1} {2} :::: pt_read1 :::: pt_read2 :::: mdir
+#parallel --xapply -j $njobs --eta kallisto quant -i $odir/master_methylotype.kidx -o {3} --pseudobam {1} {2} :::: pt_read1 :::: pt_read2 :::: mdir
+parallel --xapply -j $njobs --eta kallisto quant -i $kidx_cell -o {3} --pseudobam {1} {2} '>' {3}/pseudoalignments.sam :::: pt_read1 :::: pt_read2 :::: mdir
 
 # convert pseudo.bam to pseudo.sam
 for file in $(cat mdir); do
+# for kallisto/0.46.0 
 samtools view $file/pseudoalignments.bam >> $(basename ${file%_out}).pseudoalignments.sam
+# for kallisto/0.43.1
+mv $file/pseudoalignments.sam $(basename ${file%_out}).pseudoalignments.sam
 done
 
 # count unique pseduoaligned reads and total pseudoaligned reads
