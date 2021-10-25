@@ -2,6 +2,7 @@
 # This script assigns paired and trimmed sequencing reads from the same samples of tissue type "identify" to tissue type "interest" and "contrast" using the k-mer index produced by $methylK_dir/quant_mk_cell.sh.
 # The C and G content of each PE read uniquely assigned is then counted.
 
+
 ##################
 ## Housekeeping ##
 ##################
