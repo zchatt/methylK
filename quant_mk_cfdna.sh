@@ -109,7 +109,7 @@ if [ $6 == "cell_methylotype.kidx" ]
   	echo 'cell_methylotype.kidx has been set'
     # kallisto/0.46.0 command. Note the cell_methylotype.kidx was made using kallisto/0.43.1, fastq therefore need to be quantified using kallisto/0.43.1
     # parallel --xapply -j $njobs --eta kallisto quant -i $methylK_dir/cell_methylotype.kidx -o {3} --pseudobam {1} {2} :::: pt_read1 :::: pt_read2 :::: mdir
-    parallel --xapply -j $njobs --eta kallisto quant -i cell_methylotype.kidx -o {3} --pseudobam {1} {2} '>' {3}/pseudoalignments.sam :::: pt_read1 :::: pt_read2 :::: mdir
+    parallel --xapply -j $njobs --eta kallisto quant -i $methylK_dir/cell_methylotype.kidx -o {3} --pseudobam {1} {2} '>' {3}/pseudoalignments.sam :::: pt_read1 :::: pt_read2 :::: mdir
   else
     echo 'cell_methylotype.kidx has not been set, attempting to use $odir/master_methylotype.kidx'
     parallel --xapply -j $njobs --eta kallisto quant -i $odir/master_methylotype.kidx -o {3} --pseudobam {1} {2} :::: pt_read1 :::: pt_read2 :::: mdir
