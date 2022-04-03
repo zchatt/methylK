@@ -1,11 +1,15 @@
+#!/usr/bin/env Rscript
+args = commandArgs(trailingOnly=TRUE)
+stringsAsFactors=FALSE
+
 # scripts below aggregate the pseduoassigned reads passing SNR threshold for eaach sample
 
 # location of mkdf.txt files
-setwd("/project/RDS-FMH-DementiaCFDNA-RW/Sunny/zac_test/methylK/test/output")
+setwd(args[1])
 
 # read in each tissue:interest mkdf files (assay level pseduoassigned reads to tissue:interest) & aggregate pseduoassigned reads passing threshold for eaach sample
-file.names <- dir(path, pattern ="mkdf.txt")
 path = getwd()
+file.names <- dir(path, pattern ="mkdf.txt")
 res <- list()
 for (i in 1:length(file.names)){
   if (length(file.names) == 0){
